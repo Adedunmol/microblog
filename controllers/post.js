@@ -6,6 +6,7 @@ const Sequelize = require('sequelize')
 const { Unauthorized, BadRequest, NotFound, Forbidden } = require('../errors')
 const { postSchema, updatePostSchema, commentSchema, scheduledPostSchema } = require('../helpers/validation_schema')
 const postSchedulerEvent = require('../events/schedulePost')
+const sequelize = require('sequelize')
 
 
 const getAllPosts = async (req, res) => {
@@ -30,10 +31,22 @@ const getPost = async (req, res) => {
 
     if (!postId) throw new BadRequest('There is no post id')
 
-    const post = await Post.findOne({ include: {
-        model: User,
-        as: 'Likers'
-    } })
+    const post = await Post.findOne({ where: { id: postId }, attributes: [
+        'id',
+        'title',
+        'body',
+        [Sequelize.literal('(SELECT COUNT(*) FROM likes where likes."postId"=Post.id)'), 'LikeCount']],
+        include: {
+            model: User,
+            as: 'Likers',
+            attributes: {
+                exclude: ['password', 'refresh_token', 'email']
+            },
+            through: {
+                attributes: []
+            }
+        } 
+})
 
     if (!post) throw new NotFound('No post with this id')
 

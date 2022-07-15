@@ -13,6 +13,7 @@ const notFound = require('./middlewares/not-found')
 const errorHandler = require('./middlewares/errorHandler')
 const verifyRoles = require('./middlewares/verifyRoles')
 const verifyJWT = require('./middlewares/verifyJWT')
+const updateLastSeen = require('./middlewares/updateLastSeen')
 const postSchedulerEvent = require('./events/schedulePost')
 
 const postRouter = require('./routes/post')
@@ -37,7 +38,7 @@ app.use('/api/v1/home', [verifyJWT, verifyRoles(ROLES_LIST.Admin)], (req, res) =
 app.use('/api/v1/auth', authRouter)
 
 app.use(verifyJWT)
-
+app.use(updateLastSeen)
 app.use('/api/v1/posts', postRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/comments', commentRouter)

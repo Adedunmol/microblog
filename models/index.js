@@ -24,13 +24,13 @@ User.belongsToMany(User, { as: 'Followed', through: 'Follow', foreignKey: 'Follo
 
 
 // many-to-many relationship between users and posts for saved posts
-User.belongsToMany(Post, { through: 'Saves', as: 'Saved' })
-Post.belongsToMany(User, { through: 'Saves', as: 'Savers' })
+User.belongsToMany(Post, { through: 'saves', as: 'Saved' })
+Post.belongsToMany(User, { through: 'saves', as: 'Savers' })
 
 
 // many-to-many relationship between users and posts for likes
-User.belongsToMany(Post, { through: 'Likes', as: 'Liked' })
-Post.belongsToMany(User, { through: 'Likes', as: 'Likers' })
+User.belongsToMany(Post, { through: 'likes', as: 'Liked' })
+Post.belongsToMany(User, { through: 'likes', as: 'Likers' })
 
 
 // many-to-many relationship between users and roles
