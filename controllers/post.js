@@ -8,7 +8,36 @@ const postSchedulerEvent = require('../events/schedulePost')
 const sequelize = require('../config/dbConn')
 
 const getAllPosts = async (req, res) => {
-    
+    const { page, limit, sort } = req.query
+
+
+    const queryObj = {
+        attributes: [
+            'id',
+            'title',
+            'body',
+            'createdAt',
+            [sequelize.literal('(SELECT COUNT(*) FROM likes where likes."postId"=Post.id)'), 'LikeCount']],
+        include: {
+                model: User,
+                as: 'Likers',
+                attributes: {
+                    exclude: ['password', 'refresh_token', 'email']
+                },
+                through: {
+                    attributes: []
+                }
+            }
+    }
+
+    queryObj.limit = limit ? limit : 10    
+
+    queryObj.offset = page ? (page - 1) * limit : 0
+
+    queryObj.order = sort ? [[sort, 'ASC']] : [['createdAt', 'ASC']] 
+
+    const posts = await Post.findAll(queryObj)
+
 
     return res.status(StatusCodes.OK).json({ posts }) 
 }
