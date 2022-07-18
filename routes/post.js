@@ -5,15 +5,19 @@ const {
     createPost, 
     updatePost, 
     deletePost, 
-    getAllPosts,
+    getUserFeed,
     createPostComment,
     getPostComments,
     likePost,
     unlikePost,
     savePost,
-    schedulePost
+    schedulePost,
+    testPosts
 } = require('../controllers/post')
 
+router.route('/testposts').get(testPosts)
+
+router.route('/feed').get(getUserFeed)
 
 router.route('/').get(getAllPosts).post(createPost)
 

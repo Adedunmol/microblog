@@ -1,24 +1,60 @@
 const { StatusCodes } = require('http-status-codes')
 const { Post, User, Comment } = require('../models/')
-const { Op } = require('sequelize')
+const { Op, QueryTypes } = require('sequelize')
 const  _ = require('lodash')
-const Sequelize = require('sequelize')
 const { Unauthorized, BadRequest, NotFound, Forbidden } = require('../errors')
 const { postSchema, updatePostSchema, commentSchema, scheduledPostSchema } = require('../helpers/validation_schema')
 const postSchedulerEvent = require('../events/schedulePost')
-const sequelize = require('sequelize')
-
+const sequelize = require('../config/dbConn')
 
 const getAllPosts = async (req, res) => {
+    
+
+    return res.status(StatusCodes.OK).json({ posts }) 
+}
+
+
+const getUserFeed = async (req, res) => {
+    const { id } = req.user
     const { page, limit, sort } = req.query
 
-    const queryObj = {}
+    const followedUsers = await sequelize.query(
+        `SELECT * FROM "Follow" WHERE "UserId" = ?`,
+        {
+            replacements: [id],
+            type: QueryTypes.SELECT
+        } 
+    )
+
+    const followedUsersIds = followedUsers.map(user => user.FollowedId)
+
+    const queryObj = {
+        where: {
+            userId: followedUsersIds
+        },
+        attributes: [
+            'id',
+            'title',
+            'body',
+            'createdAt',
+            [sequelize.literal('(SELECT COUNT(*) FROM likes where likes."postId"=Post.id)'), 'LikeCount']],
+        include: {
+                model: User,
+                as: 'Likers',
+                attributes: {
+                    exclude: ['password', 'refresh_token', 'email']
+                },
+                through: {
+                    attributes: []
+                }
+            }
+    }
 
     queryObj.limit = limit ? limit : 10    
 
-    queryObj.order = sort ? [[sort, 'ASC']] : [['createdAt', 'ASC']]
-
     queryObj.offset = page ? (page - 1) * limit : 0
+
+    queryObj.order = sort ? [[sort, 'ASC']] : [['createdAt', 'ASC']] 
 
     const posts = await Post.findAll(queryObj)
 
@@ -209,11 +245,12 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    getAllPosts,
+    getUserFeed,
     createPostComment,
     getPostComments,
     likePost,
     unlikePost,
     savePost,
-    schedulePost
+    schedulePost,
+    getAllPosts
 }
