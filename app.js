@@ -6,6 +6,10 @@ const morgan = require('morgan')
 const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimiter = require('express-rate-limit')
 
 const { initialize_roles } = require('./models')
 
@@ -24,6 +28,14 @@ const feedRouter = require('./routes/feed')
 const { ROLES_LIST } = require('./config/roles_list')
 const { schedule } = require('./jobs/scheduler')
 
+app.set('trust proxy', 1)
+app.use(rateLimiter({
+    windowMs: 5 * 60 * 60 * 1000,
+    max: 100
+}))
+app.use(cors())
+app.use(helmet())
+app.use(xss())
 app.use(cookieParser())
 app.use(express.json())
 app.use(morgan('dev'))
@@ -52,9 +64,7 @@ const PORT = process.env.PORT || 5000
 
 sequelize.authenticate().then(async () => {
     console.log('Database Connected...')
-    await sequelize.sync({ alter: true })
-    initialize_roles()
-    console.log('Database Synced...')
+    await initialize_roles()
     app.listen(PORT, () => {
         console.log(`Server is listening on port ${PORT}...`)
     })

@@ -30,6 +30,10 @@ const User = sequelize.define('user', {
             this.setDataValue('password', password_hash)
         }
     },
+    private: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
     refresh_token: {
         type: DataTypes.STRING
     },
