@@ -22,7 +22,7 @@ agenda.on('ready', async () => {
 //define all agenda jobs
 allDefinitions(agenda)
 
-console.log({ jobs: agenda._definitions })
+//console.log({ jobs: agenda._definitions })
 
 
 module.exports = agenda

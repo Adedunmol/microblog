@@ -85,11 +85,25 @@ const unfollowUser = async (req, res) => {
 }
 
 
+const getUserPosts = async (req, res) => {
+    const { userId } = req.params
+
+    if (!userId) throw new BadRequest('No userId with request')
+
+    const user = await User.findByPk(userId)
+
+    const posts = await user.getPosts()
+
+    return res.status(StatusCodes.OK).json({ data: posts })
+}
+
+
 module.exports = {
     getUser,
     updateUser,
     getFollowers,
     followUser,
     getFollowing,
-    unfollowUser
+    unfollowUser,
+    getUserPosts
 }
