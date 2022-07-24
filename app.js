@@ -44,7 +44,7 @@ postSchedulerEvent.on('schedule-post', (data) => {
     schedule.schedulePost(data, data.date)
 })
 
-app.use('/api/v1/home', [verifyJWT, verifyRoles(ROLES_LIST.Admin)], (req, res) => {
+app.use('/api/v1/home', (req, res) => {
     return res.send('Home page')
 })
 
