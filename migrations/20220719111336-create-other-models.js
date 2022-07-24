@@ -82,7 +82,9 @@ module.exports = {
         references: {
           model: 'posts',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       }
     })
   },
