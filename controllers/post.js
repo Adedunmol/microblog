@@ -100,7 +100,7 @@ const getPost = async (req, res) => {
         'id',
         'title',
         'body',
-        [Sequelize.literal('(SELECT COUNT(*) FROM likes where likes."postId"=Post.id)'), 'LikeCount']],
+        [sequelize.literal('(SELECT COUNT(*) FROM likes where likes."postId"=Post.id)'), 'LikeCount']],
         include: {
             model: User,
             as: 'Likers',
