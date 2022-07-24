@@ -143,6 +143,8 @@ const updatePost = async (req, res) => {
 
     const post = await Post.findByPk(postId)
     
+    if (!post) throw new NotFound('No post found with this id')
+
     if (post.userId !== userId) throw new Forbidden('You are not the owner of this post')
 
     post.title = validationResult.title || post.title
@@ -163,6 +165,8 @@ const deletePost = async (req, res) => {
 
     const post = await Post.findByPk(postId)
     
+    if (!post) throw new NotFound('No post found with this id')
+
     if (post.userId !== userId) throw new Forbidden('You are not the owner of this post')
 
     const result = await post.destroy()
@@ -180,6 +184,8 @@ const createPostComment = async (req, res) => {
     const validationResult = await commentSchema.validateAsync(req.body)
 
     const post = await Post.findByPk(postId)
+
+    if (!post) throw new NotFound('No post found with this id')
 
     const comment = await post.createComment({
         ...validationResult,
@@ -200,6 +206,8 @@ const getPostComments = async (req, res) => {
 
     const post = await Post.findByPk(postId)
 
+    if (!post) throw new NotFound('No post found with this id')
+
     const comments = await post.getComments()
 
     return res.status(StatusCodes.OK).json({ data: comments })
@@ -214,6 +222,8 @@ const likePost = async (req, res) => {
 
     const user = await User.findByPk(userId)
     const post = await Post.findByPk(postId)
+
+    if (!post) throw new NotFound('No post found with this id')
 
     const like = await user.addLiked(post)
 
@@ -230,6 +240,8 @@ const unlikePost = async (req, res) => {
     const user = await User.findByPk(userId)
     const post = await Post.findByPk(postId)
 
+    if (!post) throw new NotFound('No post found with this id')
+
     const like = await user.removeLiked(post)
 
     return res.status(StatusCodes.OK).json({ msg: `User ${user.id} has unliked post ${post.id}` })
@@ -244,6 +256,8 @@ const savePost = async (req, res) => {
 
     const user = await User.findByPk(userId)
     const post = await Post.findByPk(postId)
+
+    if (!post) throw new NotFound('No post found with this id')
 
     const savedPost = await user.addSaved(post)
 
