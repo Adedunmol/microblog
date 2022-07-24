@@ -40,7 +40,11 @@ const updateUser = async (req, res) => {
 const getFollowers = async (req, res) => {
     const { userId } = req.params
 
+    if (!userId) throw new BadRequest('No id sent with with url')
+
     const user = await User.findByPk(userId)
+
+    if (!user) throw new NotFound('No user found with this id')
 
     const followers = await user.getFollowed({attributes: { exclude: ['password', 'refresh_token'] }})
 
@@ -52,8 +56,12 @@ const followUser = async (req, res) => {
     const { id } = req.user
     const { userId } = req.params
 
+    if (!userId) throw new BadRequest('No id sent with url')
+
     const user = await User.findByPk(id)
     const followedUser = await User.findByPk(userId)
+
+    if (!followedUser) throw new NotFound('No user found with this id')
 
     const followers = await user.addUser(followedUser)
 
@@ -64,7 +72,11 @@ const followUser = async (req, res) => {
 const getFollowing = async (req, res) => {
     const { userId } = req.params
 
+    if (!userId) throw new BadRequest('No id sent with url')
+
     const user = await User.findByPk(userId)
+
+    if (!user) throw new NotFound('No user found with this id')
 
     const followers = await user.getUser({attributes: { exclude: ['password', 'refresh_token'] }})
 
@@ -76,8 +88,12 @@ const unfollowUser = async (req, res) => {
     const { id } = req.user
     const { userId } = req.params
 
+    if (!userId) throw new BadRequest('No id sent with url')
+
     const user = await User.findByPk(id)
     const followedUser = await User.findByPk(userId)
+
+    if (!followedUser) throw new NotFound('No user found with this id')
 
     const followers = await user.removeUser(followedUser)
 
@@ -91,6 +107,8 @@ const getUserPosts = async (req, res) => {
     if (!userId) throw new BadRequest('No userId with request')
 
     const user = await User.findByPk(userId)
+
+    if (!user) throw new NotFound('No user found with this id')
 
     const posts = await user.getPosts()
 
