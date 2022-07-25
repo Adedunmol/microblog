@@ -50,7 +50,7 @@ postSchedulerEvent.on('schedule-post', (data) => {
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
-app.use('/api/v1/home', (req, res) => {
+app.use('/', (req, res) => {
     return res.send(`<h1>node-microblog-api</h1>
                     <a href="/api-docs">Go to Docs</a>`)
 })
