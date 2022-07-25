@@ -10,6 +10,10 @@ const cors = require('cors')
 const helmet = require('helmet')
 const xss = require('xss-clean')
 const rateLimiter = require('express-rate-limit')
+const swaggerUI = require('swagger-ui-express')
+const YAML = require('yamljs')
+
+const swaggerDocument = YAML.load('./swagger.yaml')
 
 const { initialize_roles } = require('./models')
 
@@ -44,8 +48,11 @@ postSchedulerEvent.on('schedule-post', (data) => {
     schedule.schedulePost(data, data.date)
 })
 
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
+
 app.use('/api/v1/home', (req, res) => {
-    return res.send('Home page')
+    return res.send(`<h1>node-microblog-api</h1>
+                    <a href="/api-docs">Go to Docs</a>`)
 })
 
 app.use('/api/v1/auth', authRouter)

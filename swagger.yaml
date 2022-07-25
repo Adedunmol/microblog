@@ -1,0 +1,520 @@
+openapi: 3.0.0
+info:
+  title: node-microblog-api
+  description: A blogging api where users can schedule posts
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://node-microblog-api.herokuapp.com/api/v1
+  variables: {}
+paths:
+  
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register User
+      operationId: RegisterUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+            example:
+              username: user2
+              email: user2@gmail.com
+              password: '12345'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login User
+      operationId: LoginUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+            example:
+              email: user2@gmail.com
+              password: '12345'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/logout:
+    get:
+      tags:
+      - Auth
+      summary: Logout user
+      operationId: Logoutuser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/refresh-token:
+    get:
+      tags:
+      - Auth
+      summary: Get A New Access Token
+      operationId: GetANewAccessToken
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /posts:
+    post:
+      tags:
+      - Posts
+      summary: Create A Post
+      operationId: CreateAPost
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAPostRequest'
+            example:
+              title: This is my first post as the second user
+              body: This is my first post and it is going to be really long later
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Posts
+      summary: Get All Posts
+      operationId: GetAllPosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /posts/{postId}:
+    parameters: 
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+          description: The post ID
+    get:
+      tags:
+      - Posts
+      summary: Get A Post
+      operationId: GetAPost
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Posts
+      summary: Update A Post
+      operationId: UpdateAPost
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAPostRequest'
+            example:
+              title: This is the updated title for the first user
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  
+    delete:
+      tags:
+      - Posts
+      summary: Delete A Post
+      operationId: DeleteAPost
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /posts/{postId}/comments:
+    parameters: 
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+          description: The post ID
+    get:
+      tags:
+      - Posts
+      summary: Get Comments Of A Post
+      operationId: GetCommentsOfAPost
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    post:
+      tags:
+      - Posts
+      summary: Create A Comment For A Post
+      operationId: CreateACommentForAPost
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateACommentForAPostRequest'
+            example:
+              body: This is the first comment for the second post, user1
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /posts/schedule:
+    post:
+      tags:
+      - Posts
+      summary: Schedule A Post
+      operationId: ScheduleAPost
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleAPostRequest'
+            example:
+              title: This is a Scheduled Post
+              body: This is a Scheduled post and it is going to be longer later
+              date: 2022-07-25
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    
+  /users/{userId}:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    get:
+      tags:
+      - Users
+      summary: Get A User
+      operationId: GetAUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Users
+      summary: Update A User
+      operationId: UpdateAUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAUserRequest'
+            example:
+              username: dunmola
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /users/{userId}/follow:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    post:
+      tags:
+      - Users
+      summary: Follow A User
+      operationId: FollowAUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /users/{userId}/followers:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    get:
+      tags:
+      - Users
+      summary: Get Followers
+      operationId: GetFollowers
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /users/{userId}/following:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    get:
+      tags:
+      - Users
+      summary: Get Following
+      operationId: GetFollowing
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /users/{userId}/unfollow:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    post:
+      tags:
+      - Users
+      summary: Unfollow A User
+      operationId: UnfollowAUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /users/{userId}/posts:
+    parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: The user ID
+    get:
+      tags:
+      - Users
+      summary: Get Users Posts
+      operationId: GetUsersPosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /feed:
+    get:
+      tags:
+      - Feed
+      summary: Get Users Feed
+      operationId: GetUsersFeed
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    RegisterUserRequest:
+      title: RegisterUserRequest
+      required:
+      - username
+      - email
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        username: user2
+        email: user2@gmail.com
+        password: '12345'
+    LoginUserRequest:
+      title: LoginUserRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: user2@gmail.com
+        password: '12345'
+    CreateAPostRequest:
+      title: CreateAPostRequest
+      required:
+      - title
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+      example:
+        title: This is my first post as the second user
+        body: This is my first post and it is going to be really long later
+    UpdateAPostRequest:
+      title: UpdateAPostRequest
+      required:
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+      example:
+        title: This is the updated title for the first user
+    CreateACommentForAPostRequest:
+      title: CreateACommentForAPostRequest
+      required:
+      - body
+      type: object
+      properties:
+        body:
+          type: string
+      example:
+        body: This is the first comment for the second post, user1
+    ScheduleAPostRequest:
+      title: ScheduleAPostRequest
+      required:
+      - title
+      - body
+      - date
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        date:
+          type: string
+      example:
+        title: This is a Scheduled Post
+        body: This is a Scheduled post and it is going to be longer later
+        date: 2022-07-25
+    UpdateAUserRequest:
+      title: UpdateAUserRequest
+      required:
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+      example:
+        username: dunmola
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+
+- name: Auth
+  description: ''
+- name: Posts
+  description: ''
+- name: Users
+  description: ''
+- name: Feed
+  description: ''
